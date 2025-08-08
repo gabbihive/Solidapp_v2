@@ -1,0 +1,42 @@
+{% extends "layout.njk" %}
+{% block content %}
+<h2>New post</h2>
+
+<form id="post-form" class="compose" method="post" action="/api/posts">
+  <label for="section_id">Section</label>
+  <select id="section_id" name="section_id" required>
+    {% for s in sections %}
+      <option value="{{ s.id }}">{{ s.name }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="kind">Kind</label>
+  <select id="kind" name="kind" required>
+    <option value="request">request</option>
+    <option value="offer">offer</option>
+    <option value="question">question</option>
+  </select>
+
+  <label for="title">Title</label>
+  <input id="title" type="text" name="title" maxlength="160" required placeholder="Short, descriptive title">
+
+  <label>Tags (optional)</label>
+  <div class="taggrid">
+    {% for t in tags %}
+      <label class="tagcheck">
+        <input type="checkbox" name="tag_ids" value="{{ t.id }}">
+        <span class="dot" style="background: {{ t.color }}"></span> {{ t.name }}
+      </label>
+    {% endfor %}
+  </div>
+
+  <label for="body_md">Body (Markdown)</label>
+  <textarea id="body_md" name="body_md" rows="12" required placeholder="Write details in Markdown..."></textarea>
+
+  <!-- JS will overwrite this with a real token; harmless if empty -->
+  <input type="hidden" name="token" value="">
+
+  <button type="submit">Post</button>
+  <span id="post-status" aria-live="polite"></span>
+</form>
+{% endblock %}

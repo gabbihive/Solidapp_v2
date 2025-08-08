@@ -1,0 +1,26 @@
+{% extends "layout.njk" %}
+{% block content %}
+<h2>/s/{{ section.slug }} — {{ section.name }}</h2>
+<p class="muted">{{ section.description }}</p>
+
+<ul class="postlist">
+{% for p in posts %}
+  <li class="postcard">
+    <div class="votes">
+      <button class="vote" data-type="post" data-id="{{ p.id }}" data-dir="1">▲</button>
+      <div class="score">{{ p.score }}</div>
+      <button class="vote" data-type="post" data-id="{{ p.id }}" data-dir="-1">▼</button>
+    </div>
+    <div class="content">
+      <div class="row">
+        <a class="title" href="/p/{{ p.id }}">{{ p.title }}</a>
+        {% if p.is_sticky %}<span class="badge badge-amber">Pinned</span>{% endif %}
+      </div>
+      <div class="meta">{{ p.kind }}</div>
+    </div>
+  </li>
+{% else %}
+  <li>No posts in this section yet.</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "layout.njk" %}
+{% block content %}
+<form class="search" method="get" action="/">
+  <input type="text" name="q" value="{{ q }}" placeholder="search...">
+  <select name="section">
+    <option value="">all sections</option>
+    {% for s in sections %}
+      <option value="{{ s.slug }}"{% if s.slug == section %} selected{% endif %}>{{ s.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="tag">
+    <option value="">all tags</option>
+    {% for t in tags %}
+      <option value="{{ t.slug }}"{% if t.slug == tag %} selected{% endif %}>{{ t.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="sort">
+    <option value="hot"{% if sort=='hot' %} selected{% endif %}>hot</option>
+    <option value="new"{% if sort=='new' %} selected{% endif %}>new</option>
+    <option value="top"{% if sort=='top' %} selected{% endif %}>top</option>
+  </select>
+  <button type="submit">Apply</button>
+</form>
+
+<ul class="postlist">
+{% for p in posts %}
+  <li class="postcard">
+    <div class="votes">
+      <button class="vote" data-type="post" data-id="{{ p.id }}" data-dir="1">▲</button>
+      <div class="score">{{ p.score }}</div>
+      <button class="vote" data-type="post" data-id="{{ p.id }}" data-dir="-1">▼</button>
+    </div>
+    <div class="content">
+      <div class="row">
+        <a class="title" href="/p/{{ p.id }}">{{ p.title }}</a>
+        {% if p.is_sticky %}<span class="badge badge-amber">Pinned</span>{% endif %}
+      </div>
+      <div class="meta">
+        in <a href="/s/{{ p.section_slug }}">{{ p.section_name }}</a> • {{ p.kind }}
+      </div>
+      {% if p.tag_names %}
+      <div class="tags">
+        {% set names = p.tag_names.split(',') %}
+        {% set colors = p.tag_colors.split(',') %}
+        {% for n in names %}
+          <span class="tag" style="--c: {{ colors[loop.index0] or '#4fa3ff' }}">{{ n }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="excerpt">{{ p.body_md | truncate(180) }}</div>
+    </div>
+  </li>
+{% else %}
+  <li>No posts yet.</li>
+{% endfor %}
+</ul>
+{% endblock %}
